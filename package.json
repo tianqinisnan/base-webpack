@@ -1,0 +1,36 @@
+{
+  "name": "base-webpack",
+  "version": "1.0.0",
+  "description": "满足一个基本的 webpack + vue 单页面的配置项目",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack-dev-server --config build/webpack.dev.conf.js",
+    "build:test": "node build/build.js build",
+    "build:online": "node build/build.js online",
+    "setup": "yarn install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tianqinisnan/base-webpack.git"
+  },
+  "keywords": [],
+  "author": "Nan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tianqinisnan/base-webpack/issues"
+  },
+  "homepage": "https://github.com/tianqinisnan/base-webpack#readme",
+  "devDependencies": {
+    "chalk": "^4.1.0",
+    "ora": "^4.0.5",
+    "rimraf": "^3.0.2",
+    "semver": "^7.3.2",
+    "webpack": "^4.44.1",
+    "webpack-dev-server": "^3.11.0",
+    "webpack-merge": "^5.1.1"
+  },
+  "engines": {
+    "node": ">= 6.0.0",
+    "npm": ">= 3.0.0"
+  }
+}
