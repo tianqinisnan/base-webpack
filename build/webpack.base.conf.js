@@ -1,5 +1,9 @@
 'use strict'
 const path = require('path')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
@@ -13,12 +17,8 @@ const createLintingRule = () => ({
   loader: 'eslint-loader',
   enforce: 'pre',
   include: [resolve('src'), resolve('test')],
-  options: {
-    formatter: require('eslint-friendly-formatter'),
-    emitWarning: !config.dev.showEslintErrorsInOverlay
-  }
+  options: {}
 })
-
 
 module.exports = {
   // Webpack 在寻找相对路径的文件时会以 context 为根目录
@@ -28,10 +28,9 @@ module.exports = {
     app: './src/main.js'
   },
   output: {
-    // 路径是config目录下的index.js中的build配置中的assetsRoot，也就是dist目录
-    path: config.build.assetsRoot,
+    path: resolve('output'),
     // 文件名称这里使用默认的name也就是main
-    filename: '[name].js',
+    filename: '[name].[hash:8].js',
     // 上线地址，也就是真正的文件引用路径，如果是production生产环境，其实这里都是 '/'
     publicPath: process.env.NODE_ENV === 'production'
       ? config.build.assetsPublicPath
@@ -90,5 +89,35 @@ module.exports = {
         }
       }
     ]
-  }
+  },
+  plugins: [
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: ['**/*']
+    }),
+    new HtmlWebpackPlugin({
+      template: './index.html',//指定模板文件
+      filename: 'index.html',//产出后的文件名
+      inject: true //插入body底部
+    }),
+    new MiniCssExtractPlugin({
+      // filename: '[name].css',
+      // chunkFilename:'[id].css'
+      filename: 'css/[name].[contenthash:8].css', //name是代码chunk的名字
+      chunkFilename: 'css/[id].css' //在异步加载的时候用的
+    }),
+    new VueLoaderPlugin()
+    // new HtmlWebpackExternalsPlugin({
+    //   externals:[
+    //     {
+    //       module:'jquery',//模块名
+    //       entry:'https://cdn.bootcss.com/jquery/3.4.1/jquery.js',//CDN的脚本路径
+    //       global:'jQuery'//从全局对象的哪个属性上获取导出的值
+    //     }
+    //   ]
+    // }),
+    // new CopyWebpackPlugin([{
+    //   from: path.resolve(__dirname,'src/assets'),//静态资源目录源地址
+    //   to: path.resolve(__dirname,'dist/assets') //目标地址，相对于output的path目录
+    // }])
+  ]
 }
